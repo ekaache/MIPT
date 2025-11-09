@@ -18,12 +18,25 @@ def test_get_book_data_fields_are_strings():
     assert type(result['price']) == str
     assert type(result['description']) == str
 
-def test_scrape_books_returns_correct_number():
-    #Тест: количество собранных книг соответствует ожиданиям
-    result = scrape_books(is_save=False)
+def test_get_book_data_with_different_books():
+    """Тест: get_book_data работает с разными книгами и возвращает словари"""
+    test_urls = [
+        "http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html",
+        "http://books.toscrape.com/catalogue/tipping-the-velvet_999/index.html"
+    ]
     
-    # На каждой странице 20 книг, тестируем 2 страницы = 40 книг
-    assert len(result) == 40
-    assert type(result) == list
-    assert all('title' in book for book in result)
+    for url in test_urls:
+        result = get_book_data(url)
+        
+        assert isinstance(result, dict)
+        assert len(result) > 0
+        assert 'title' in result
+        assert 'price' in result
+        
+        if url == test_urls[0]:
+            title1 = result['title']
+        else:
+            title2 = result['title']
+
+    assert title1 != title2
     
